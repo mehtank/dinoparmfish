@@ -1,0 +1,20 @@
+File structure:
+~~~~~~~~~~~~~~~
+
+/                   : root directory
+
+  tournament.py     : python script that runs the tournament
+
+  engine/           : contains the game engine class
+    game.py         : handles the game mechanics
+
+  players/          : contains all the players
+    players.py      : finds available players for the tournament
+
+    randomPlayer/   : test player
+    alice/          : contributed players
+    bob/ 
+    ...
+      player.py     : top-level class to be loaded
+      __init__.py   : (empty file) required to load modules
+      poo.py        : any additional required files
