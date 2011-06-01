@@ -7,11 +7,14 @@ MAXTURNS = 1000
 class game:
   score = [0, 0]
 
-  def debug(self, s):
+  def output(self, s):
+    if not self.debug:
+      return
     print "Game message: ", 
     print s
 
-  def __init__(self, team0, team1):
+  def __init__(self, team0, team1, debug=False):
+    self.debug = debug
     # XXX TODO: check to make sure teams are valid
     self.team0 = team0
     self.team1 = team1
@@ -157,33 +160,33 @@ class game:
 
     team = currentPlayer % 2
     opponents = 1 - team
-    self.debug ("Player " + repr(currentPlayer) + " on team " + repr(team) + " declared suit " + repr(suit))
+    self.output ("Player " + repr(currentPlayer) + " on team " + repr(team) + " declared suit " + repr(suit))
 
     trueAttrib = self.killSuit(suit)
 
     if len(attrib) != card.NUMVALUES:
       # invalid attributation
-      self.debug ("attrib not right length")
+      self.output ("attrib not right length")
       self.score[opponents] += 1
       return False
 
     for player in trueAttrib:
       if (currentPlayer - player) % 2 == 1:
         # card held by opposing team
-        self.debug ("Player " + repr(player) + " has a card")
+        self.output ("Player " + repr(player) + " has a card")
         self.score[opponents] += 1
         return False
 
     if attrib == trueAttrib:
       # correct declaration
-      self.debug ("Success!")
+      self.output ("Success!")
       self.score[team] += 1
       return True
 
     # incorrect attributions
-    self.debug ("Failure:")
-    self.debug (repr(attrib))
-    self.debug (repr(trueAttrib))
+    self.output ("Failure:")
+    self.output (repr(attrib))
+    self.output (repr(trueAttrib))
     self.score[opponents] += 1
     return False
 

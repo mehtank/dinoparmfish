@@ -2,9 +2,14 @@ import random
 from ..engine import card
 
 class player:
-  def debug(self, s):
+  def output(self, s):
+    if not self.debug:
+      return
     print "Player " + repr(self.index) + ": ",
     print s
+
+  def __init__(self, debug=False):
+    self.debug = debug
 
   def setup(self, index, numPlayers, hand):
     self.index = index
@@ -15,10 +20,10 @@ class player:
     for c in hand:
       s += "\n  " + repr(c)
 
-    self.debug(s)
+    self.output(s)
 
   def passTo(self):
-    return (index + 2) % numPlayers;
+    return (self.index + 2) % self.numPlayers;
 
   def getAsk(self):
     target = random.randint(0, (self.numPlayers / 2) - 1)
@@ -33,15 +38,16 @@ class player:
     value = random.choice(values)
 
     ask = card.card(suit=myCard.suit, value=value)
-    self.debug("asking player " + repr(target) + " for " + repr(ask))
+    self.output("asking player " + repr(target) + " for " + repr(ask))
     return (target, ask)
 
   def tellAsk(self, currentPlayer, target, card, askSuccessful):
     if askSuccessful:
       if (target == self.index):
+        self.output("Gave " + repr(card) + " to player " + repr(currentPlayer))
         self.hand.pop(self.hand.index(card))
       if (currentPlayer == self.index):
-        self.debug("Got " + repr(card) + " from player " + repr(target))
+        self.output("Got " + repr(card) + " from player " + repr(target))
         self.hand.append(card)
 
   def getDeclaration(self):
@@ -51,7 +57,7 @@ class player:
         if c.suit == suit:
           count += 1
       if count == card.NUMVALUES:
-        self.debug("Declaring suit: " + repr(suit))
+        self.output("Declaring suit: " + repr(suit))
         return (suit, [self.index] * card.NUMVALUES)
     else:
       return (None, None)

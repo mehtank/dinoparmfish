@@ -11,7 +11,7 @@ p6 = rp.player()
 team0 = [p1, p3, p5]
 team1 = [p2, p4, p6]
 
-g = game.game(team0, team1)
+g = game.game(team0, team1, debug=True)
 
 score = g.go()
 
