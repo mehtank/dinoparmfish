@@ -15,7 +15,7 @@ class game:
 
   def __init__(self, team0, team1, debug=False):
     self.debug = debug
-    # XXX TODO: check to make sure teams are valid
+    # XXX TODO: check to make sure teams / players are valid
     self.team0 = team0
     self.team1 = team1
     self.teamSize = min(len(self.team0), len(self.team1))
@@ -46,9 +46,10 @@ class game:
       # deal out the cards
       self.hands += [ deck[2*i :: self.numPlayers], deck[2*i+1 :: self.numPlayers] ]
 
+    handSizes = [len(h) for h in self.hands]
     # tell the players their position and starting hand
     for i in range(self.numPlayers):
-      self.players[i].setup(i, self.numPlayers, copy.deepcopy(self.hands[i])) # PLAYER CALL
+      self.players[i].setup(i, handSizes, copy.deepcopy(self.hands[i])) # PLAYER CALL
 
   def play(self):
     # determine which team starts

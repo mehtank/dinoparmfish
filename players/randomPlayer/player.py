@@ -11,9 +11,9 @@ class player:
   def __init__(self, debug=False):
     self.debug = debug
 
-  def setup(self, index, numPlayers, hand):
+  def setup(self, index, handSizes, hand):
     self.index = index
-    self.numPlayers = numPlayers
+    self.numPlayers = len(handSizes)
     self.hand = hand
 
     s = "Initialized : "
