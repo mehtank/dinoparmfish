@@ -1,7 +1,7 @@
 import random
 from ..engine import card
 
-class player:
+class Player:
   def output(self, s):
     if not self.debug:
       return
@@ -37,7 +37,7 @@ class player:
         values.pop(values.index(c.value))
     value = random.choice(values)
 
-    ask = card.card(suit=myCard.suit, value=value)
+    ask = card.Card(suit=myCard.suit, value=value)
     self.output("asking player " + repr(target) + " for " + repr(ask))
     return (target, ask)
 
@@ -62,7 +62,7 @@ class player:
     else:
       return (None, None)
 
-  def tellDeclaration(self, currentPlayer, suit, attrib, declarationSuccessful):
+  def tellDeclaration(self, currentPlayer, suit, attrib, declarationSuccessful, trueAttrib):
     if declarationSuccessful is None:
       return
     topop = []

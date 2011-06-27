@@ -1,17 +1,17 @@
 from engine import game
 from players.randomPlayer import player as rp
 
-p1 = rp.player()
-p2 = rp.player()
-p3 = rp.player()
-p4 = rp.player()
-p5 = rp.player()
-p6 = rp.player()
+p1 = rp.Player(debug=True)
+p2 = rp.Player()
+p3 = rp.Player()
+p4 = rp.Player()
+p5 = rp.Player()
+p6 = rp.Player()
 
 team0 = [p1, p3, p5]
 team1 = [p2, p4, p6]
 
-g = game.game(team0, team1, debug=True)
+g = game.Game(team0, team1, debug=True)
 
 score = g.go()
 

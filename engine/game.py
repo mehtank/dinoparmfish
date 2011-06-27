@@ -4,7 +4,7 @@ import copy
 
 MAXTURNS = 1000
 
-class game:
+class Game:
   score = [0, 0]
 
   def output(self, s):
@@ -27,7 +27,7 @@ class game:
     return self.score
 
   def setup(self):
-    deck = [ card.card(value=value,suit=suit) 
+    deck = [ card.Card(value=value,suit=suit) 
                 for value in range(card.NUMVALUES) 
                 for suit in range(card.NUMSUITS) ]
 
@@ -63,10 +63,12 @@ class game:
       # if the current player has no hand, he passes to anyone on his team
       while len(self.hands[currentPlayer]) == 0:
         newPlayer = self.players[currentPlayer].passTo() # PLAYER CALL
+        self.output("Player " + repr(currentPlayer) + " tried to pass to player " + repr(newPlayer))
         if ((currentPlayer - newPlayer) % 2) == 0 and len(self.hands[newPlayer]) > 0:
           currentPlayer = newPlayer
         else:
           currentPlayer = (currentPlayer + 2) % self.teamSize
+          self.output(" -- invalid, passed to " + repr(currentPlayer) + " instead.")
 
       currentPlayer = self.turn(currentPlayer)
       self.getDeclarations(currentPlayer)
@@ -84,6 +86,10 @@ class game:
     if self.isValidAsk(currentPlayer, target, ask):
       # determine whether the target has the card or not
       askSuccessful = self.resolveAsk(currentPlayer, target, ask)
+      # debug
+      self.output("Player " + repr(currentPlayer) + " asked player " + repr(target) + " for card " + repr(ask))
+      if askSuccessful:
+        self.output(" -- and got it.")
       # tell everyone what happened
       for p in self.players:
         p.tellAsk(currentPlayer, target, copy.copy(ask), askSuccessful) # PLAYER CALL
@@ -140,11 +146,11 @@ class game:
       # get the current player to declare a suit
       (suit, attrib) = self.players[currentPlayer].getDeclaration() # PLAYER CALL
       # determine whether the target has the card or not
-      declarationSuccessful = self.resolveDeclaration(currentPlayer, suit, attrib)
+      (declarationSuccessful, trueAttrib) = self.resolveDeclaration(currentPlayer, suit, attrib)
 
       # tell everyone what happened
       for p in self.players:
-        p.tellDeclaration(currentPlayer, suit, copy.copy(attrib), declarationSuccessful) # PLAYER CALL
+        p.tellDeclaration(currentPlayer, suit, copy.copy(attrib), declarationSuccessful, trueAttrib) # PLAYER CALL
 
       if declarationSuccessful:
         # correct declaration: reset counter, keep on same player
@@ -157,7 +163,7 @@ class game:
   def resolveDeclaration(self, currentPlayer, suit, attrib):
     if suit is None:
       # no declaration
-      return None
+      return (None, None)
 
     team = currentPlayer % 2
     opponents = 1 - team
@@ -169,27 +175,27 @@ class game:
       # invalid attributation
       self.output ("attrib not right length")
       self.score[opponents] += 1
-      return False
+      return (False, trueAttrib)
 
     for player in trueAttrib:
       if (currentPlayer - player) % 2 == 1:
         # card held by opposing team
         self.output ("Player " + repr(player) + " has a card")
         self.score[opponents] += 1
-        return False
+        return (False, trueAttrib)
 
     if attrib == trueAttrib:
       # correct declaration
       self.output ("Success!")
       self.score[team] += 1
-      return True
+      return (True, trueAttrib)
 
     # incorrect attributions
     self.output ("Failure:")
     self.output (repr(attrib))
     self.output (repr(trueAttrib))
     self.score[opponents] += 1
-    return False
+    return (False, trueAttrib)
 
   def killSuit(self, suit):
     trueAttrib = [-1] * card.NUMVALUES

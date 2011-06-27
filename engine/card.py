@@ -1,7 +1,7 @@
 NUMVALUES = 6
 NUMSUITS = 8
 
-class card:
+class Card:
   suit = -1
   value = -1
 
